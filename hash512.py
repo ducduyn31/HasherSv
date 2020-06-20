@@ -1,6 +1,7 @@
+import time
 from hashlib import sha512
 from optparse import OptionParser
-import time
+
 parser = OptionParser()
 
 if __name__ == '__main__':
@@ -17,7 +18,9 @@ if __name__ == '__main__':
             hasher.update(buffer)
             buffer = f.read(1 << 16)
 
+        hex = hasher.hexdigest()
         tok = time.perf_counter_ns()
         elapsed_time = tok - tik
 
-    print(elapsed_time / 10**9)
+    print(elapsed_time)
+    print(hex)
