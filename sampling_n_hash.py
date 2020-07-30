@@ -1,20 +1,15 @@
 import math
-import os
+import os, psutil
 import time
 from hashlib import sha512
 from optparse import OptionParser
 
+process = psutil.Process(os.getpid())
 parser = OptionParser()
 
-if __name__ == '__main__':
-    parser.add_option('-i', '--input', help='File to hash')
-    parser.add_option('-n', '--samples', default=1, help='# of samples')
-    parser.add_option('-b', '--blocksize', default=128, help='Sample block size')
-    (options, args) = parser.parse_args()
-    file_path = options.input
+
+def exec(filepath, block_size, n):
     file_size = os.path.getsize(file_path)
-    block_size = int(options.blocksize)
-    n = int(options.samples)
 
     with open(file_path, 'rb') as f:
         hasher = sha512()
@@ -38,5 +33,24 @@ if __name__ == '__main__':
         tok = time.perf_counter_ns()
         elapsed_time = tok - tik
 
-    print(elapsed_time)
-    print(hex)
+    return elapsed_time, hex
+
+
+if __name__ == '__main__':
+    parser.add_option('-i', '--input', help='File to hash')
+    parser.add_option('-n', '--samples', default=1, help='# of samples')
+    parser.add_option('-b', '--blocksize', default=128, help='Sample block size')
+    (options, args) = parser.parse_args()
+    file_path = options.input
+    block_size = int(options.blocksize)
+    n = int(options.samples)
+
+    # process.nice(0)
+    # print(process.nice())
+
+    results = []
+
+    for i in range(1000):
+        results.append(exec(file_path,block_size, n))
+
+    print(sorted(results, key= lambda x: x[0])[499])

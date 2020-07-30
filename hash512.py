@@ -4,11 +4,8 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
-if __name__ == '__main__':
-    parser.add_option('-i', '--input', help='File to hash')
-    (options, args) = parser.parse_args()
-    file_path = options.input
 
+def exec(filepath):
     with open(file_path, 'rb') as f:
         hasher = sha512()
 
@@ -22,5 +19,17 @@ if __name__ == '__main__':
         tok = time.perf_counter_ns()
         elapsed_time = tok - tik
 
-    print(elapsed_time)
-    print(hex)
+    return elapsed_time, hex
+
+
+if __name__ == '__main__':
+    parser.add_option('-i', '--input', help='File to hash')
+    (options, args) = parser.parse_args()
+    file_path = options.input
+
+    results = []
+
+    for i in range(1000):
+        results.append(exec(file_path))
+
+    print(sorted(results, key= lambda x: x[0])[499])
