@@ -51,7 +51,7 @@ def get_session():
 
 
 def log_to_db(file_path: str, original_hash: str, n_samples: int, new_hash: str, file_size: int, original_time: int,
-              optimized_time: int):
+              optimized_time: int, remove_file_after: bool):
     new_file = HashedFile(filename=os.path.basename(file_path), extension=file_path.split('.')[-1],
                           original_hash=original_hash,
                           samples=n_samples,
@@ -61,5 +61,6 @@ def log_to_db(file_path: str, original_hash: str, n_samples: int, new_hash: str,
     get_session().add(new_file)
     get_session().commit()
 
-    os.remove(file_path)
+    if remove_file_after:
+        os.remove(file_path)
     return new_file
