@@ -9,7 +9,7 @@ if __name__ == '__main__':
     parser.add_option('-i', '--input', help='File to hash')
     parser.add_option('-n', '--samples', default=1, help='# of samples')
     parser.add_option('-b', '--blocksize', default=128, help='Sample block size')
-    parser.add_option('-q', '--quite', default=False, help='Quite mode')
+    parser.add_option('-q', action="store_true", dest="quite")
     (options, args) = parser.parse_args()
     file_path = options.input
     block_size = int(options.blocksize)
