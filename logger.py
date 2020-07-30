@@ -38,12 +38,14 @@ def get_session():
             engine = saved_instances['engine']
         else:
             engine = create_engine(f'postgresql://{username}:{password}@{host}:{port}/{database}')
+            saved_instances['engine'] = engine
 
         Base.metadata.create_all(engine)
         Session = sessionmaker()
         Session.configure(bind=engine)
 
         session = Session()
+        saved_instances['session'] = session
 
     return session
 
@@ -59,5 +61,5 @@ def log_to_db(file_path: str, original_hash: str, n_samples: int, new_hash: str,
     get_session().add(new_file)
     get_session().commit()
 
-    os.remove(file_path)
+    # os.remove(file_path)
     return new_file
