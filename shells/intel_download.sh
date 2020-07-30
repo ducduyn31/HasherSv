@@ -4,8 +4,8 @@ input=$1
 
 while IFS= read -r line; do
   for N in 1 2 3 4 5 6 7 8 9; do
-    python $(pwd)/runner.py -i "$line" -n "$N"
+    python $(pwd)/../runner.py -i "$line" -n "$N"
   done
 
-  python $(pwd)/runner.py -i "$line" -n 10 -r
+  python $(pwd)/../runner.py -i "$line" -n 10 -r
 done <"$input"
