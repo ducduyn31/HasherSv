@@ -9,8 +9,8 @@ if __name__ == '__main__':
     parser.add_option('-i', '--input', help='File to hash')
     parser.add_option('-n', '--samples', default=1, help='# of samples')
     parser.add_option('-b', '--blocksize', default=128, help='Sample block size')
-    parser.add_option('-q', action="store_false", dest="quite")
-    parser.add_option('-r', action="store_false", dest="remove")
+    parser.add_option('-q', action="store_true", dest="quite")
+    parser.add_option('-r', action="store_true", dest="remove")
     (options, args) = parser.parse_args()
     file_path = options.input
     block_size = int(options.blocksize)
@@ -31,6 +31,6 @@ if __name__ == '__main__':
     log_to_db(file_path, full_hash_hex, n, tactical_hash_hex, os.path.getsize(file_path), full_hash_time,
               tactical_hash_time, willRemove)
 
-    if isQuite:
+    if not isQuite:
         print(full_hash_hex, int(full_hash_time))
         print(tactical_hash_hex, int(tactical_hash_time))
