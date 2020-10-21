@@ -8,7 +8,7 @@ parser = OptionParser()
 
 
 def exec(filepath):
-    with open(file_path, 'rb') as f:
+    with open(filepath, 'rb') as f:
         hasher = sha512()
 
         buffer = f.read()
