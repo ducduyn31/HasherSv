@@ -3,6 +3,7 @@ import os
 import time
 from hashlib import sha512
 from optparse import OptionParser
+from statistics import mean
 
 import psutil
 
@@ -51,10 +52,10 @@ def main(file_path, block_size, n):
     psutil.Process().nice(-20)
     results = []
 
-    for i in range(1):
+    for i in range(100):
         results.append(exec(file_path, block_size, n))
 
-    return sorted(results, key=lambda x: x[0])[0]
+    return mean(list(map(lambda x: x[0], results))), mean(list(map(lambda x: x[1], results))), results[0][2]
 
 
 if __name__ == '__main__':
