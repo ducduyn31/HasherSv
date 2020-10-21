@@ -29,7 +29,7 @@ if __name__ == '__main__':
     isQuite = bool(options.quite)
     willRemove = bool(options.remove)
 
-    with open(file_list, 'r') as fl:
+    with open(file_list, 'rb') as fl:
         files = fl.read().splitlines()
 
     processes = []
