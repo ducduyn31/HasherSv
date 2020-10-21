@@ -13,7 +13,7 @@ parser = OptionParser()
 def exec(filepath, block_size, n):
     file_size = os.path.getsize(filepath)
 
-    with open(file_path, 'rb') as f:
+    with open(filepath, 'rb') as f:
         hasher = sha512()
         tik = time.perf_counter_ns()
 
