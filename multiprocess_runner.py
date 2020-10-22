@@ -10,16 +10,11 @@ from logger_2 import log_to_db
 
 parser = OptionParser()
 
-
-def combine_result(t1, t2):
-    t1.get()
-
-
 if __name__ == '__main__':
     start = time.time()
     parser.add_option('-i', '--input', help='File List of File to hash')
     parser.add_option('-n', '--samples', default=1, help='# of samples')
-    parser.add_option('-b', '--blocksize', default=128, help='Sample block size')
+    parser.add_option('-b', '--blocksize', default=64, help='Sample block size')
     parser.add_option('-q', action="store_true", dest="quite")
     parser.add_option('-r', action="store_true", dest="remove")
     (options, args) = parser.parse_args()
@@ -29,7 +24,7 @@ if __name__ == '__main__':
     isQuite = bool(options.quite)
     willRemove = bool(options.remove)
 
-    with open(file_list, 'rb') as fl:
+    with open(file_list, 'r') as fl:
         files = fl.read().splitlines()
 
     processes = []
@@ -45,6 +40,6 @@ if __name__ == '__main__':
                                              tactical_hash_time, tactical_io_time, willRemove])
             processes.append(c)
 
-    [process.wait() for process in processes]
+    [process.get() for process in processes]
 
     print('That took {} seconds'.format(time.time() - start))

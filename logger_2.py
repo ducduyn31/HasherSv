@@ -52,14 +52,16 @@ def get_session():
 
 
 def log_to_db(file_path: str, original_hash: str, n_samples: int, new_hash: str, file_size: int, original_time: int,
-              optimized_time: int, io_time: int , remove_file_after: bool):
-    new_file = HashedFile(filename=os.path.basename(file_path), extension=file_path.split('.')[-1],
+              optimized_time: int, io_time: int, remove_file_after: bool):
+    new_file = HashedFile(filename=os.path.basename(file_path),
+                          extension=file_path.split('.')[-1],
                           original_hash=original_hash,
                           samples=n_samples,
-                          hash_value=new_hash, old_hash_time=original_time, new_hash_time=optimized_time,
+                          hash_value=new_hash,
+                          old_hash_time=original_time,
+                          new_hash_time=optimized_time,
                           file_read_time=io_time,
                           file_size=file_size)
-
     get_session().add(new_file)
     get_session().commit()
 

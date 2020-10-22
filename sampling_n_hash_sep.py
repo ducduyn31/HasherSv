@@ -49,7 +49,7 @@ def exec(filepath, block_size, n):
 
 
 def main(file_path, block_size, n):
-    psutil.Process().nice(-20)
+    psutil.Process().nice(-10)
     results = []
 
     for i in range(100):
