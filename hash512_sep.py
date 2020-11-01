@@ -33,7 +33,9 @@ def main(file_path):
     psutil.Process().nice(-10)
     results = []
 
-    for i in range(100):
+    times = 2
+
+    for i in range(times):
         results.append(exec(file_path))
 
     return mean(list(map(lambda x: x[0], results))) , results[0][1]

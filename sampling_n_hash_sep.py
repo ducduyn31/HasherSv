@@ -52,7 +52,9 @@ def main(file_path, block_size, n):
     psutil.Process().nice(-10)
     results = []
 
-    for i in range(100):
+    times = 2
+
+    for i in range(times):
         results.append(exec(file_path, block_size, n))
 
     return mean(list(map(lambda x: x[0], results))), mean(list(map(lambda x: x[1], results))), results[0][2]
