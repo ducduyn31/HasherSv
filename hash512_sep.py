@@ -29,11 +29,9 @@ def exec(filepath):
     return elapsed_time, hex
 
 
-def main(file_path):
-    psutil.Process().nice(-10)
+def main(file_path, times):
+    psutil.Process().nice(0)
     results = []
-
-    times = 2
 
     for i in range(times):
         results.append(exec(file_path))

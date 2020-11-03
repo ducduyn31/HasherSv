@@ -48,11 +48,9 @@ def exec(filepath, block_size, n):
     return io_time, elapsed_time, hex
 
 
-def main(file_path, block_size, n):
-    psutil.Process().nice(-10)
+def main(file_path, block_size, n, times):
+    psutil.Process().nice(0)
     results = []
-
-    times = 2
 
     for i in range(times):
         results.append(exec(file_path, block_size, n))

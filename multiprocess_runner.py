@@ -31,13 +31,15 @@ if __name__ == '__main__':
 
     with closing(multiprocessing.Pool(processes=multiprocessing.cpu_count())) as pool:
 
+        hashed_times = 2
+
         for f in files:
-            a = pool.apply_async(hash512_sep.main, [f])
-            b = pool.apply_async(sampling_n_hash_sep.main, [f, block_size, n])
+            a = pool.apply_async(hash512_sep.main, [f, hashed_times])
+            b = pool.apply_async(sampling_n_hash_sep.main, [f, block_size, n, hashed_times])
             full_hash_time, full_hash_hex = a.get()
             tactical_io_time, tactical_hash_time, tactical_hash_hex = b.get()
             c = pool.apply_async(log_to_db, [f, full_hash_hex, n, tactical_hash_hex, os.path.getsize(f), full_hash_time,
-                                             tactical_hash_time, tactical_io_time, willRemove])
+                                             hashed_times, tactical_hash_time, tactical_io_time, willRemove])
             processes.append(c)
 
     [process.get() for process in processes]

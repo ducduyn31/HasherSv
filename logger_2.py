@@ -20,6 +20,7 @@ class HashedFile(Base):
     new_hash_time = Column(BigInteger)
     file_read_time = Column(BigInteger)
     file_size = Column(BigInteger)
+    hashed_times = Column(Integer)
 
 
 saved_instances = {}
@@ -52,19 +53,41 @@ def get_session():
 
 
 def log_to_db(file_path: str, original_hash: str, n_samples: int, new_hash: str, file_size: int, original_time: int,
-              optimized_time: int, io_time: int, remove_file_after: bool):
-    new_file = HashedFile(filename=os.path.basename(file_path),
-                          extension=file_path.split('.')[-1],
-                          original_hash=original_hash,
-                          samples=n_samples,
-                          hash_value=new_hash,
-                          old_hash_time=original_time,
-                          new_hash_time=optimized_time,
-                          file_read_time=io_time,
-                          file_size=file_size)
-    get_session().add(new_file)
-    get_session().commit()
+              hashed_time: int, optimized_time: int, io_time: int, remove_file_after: bool):
+    existed_file = get_session().query(HashedFile).filter_by(
+        filename=os.path.basename(file_path),
+        extension=file_path.split('.')[-1],
+        samples=n_samples,
+        hash_value=new_hash,
+        original_hash=original_hash
+    ).first()
 
-    if remove_file_after:
-        os.remove(file_path)
-    return new_file
+    if existed_file:
+        old_hashed_times = existed_file.hashed_times
+        new_hashed_times = old_hashed_times + hashed_time
+        existed_file.hashed_times = new_hashed_times
+        existed_file.new_hash_time = (
+                                             existed_file.new_hash_time * old_hashed_times + optimized_time * hashed_time) / new_hashed_times
+        existed_file.old_hash_time = (
+                                             existed_file.old_hash_time * old_hashed_times + original_time * hashed_time) / new_hashed_times
+        existed_file.file_read_time = (
+                                              existed_file.file_read_time * old_hashed_times + io_time * hashed_time) / new_hashed_times
+        existed_file.hashed_times = new_hashed_times
+
+        get_session().commit()
+        return existed_file
+    else:
+        new_file = HashedFile(filename=os.path.basename(file_path), extension=file_path.split('.')[-1],
+                              original_hash=original_hash,
+                              samples=n_samples,
+                              hash_value=new_hash, old_hash_time=original_time, new_hash_time=optimized_time,
+                              file_read_time=io_time,
+                              hashed_times=hashed_time,
+                              file_size=file_size)
+
+        get_session().add(new_file)
+        get_session().commit()
+
+        if remove_file_after:
+            os.remove(file_path)
+        return new_file
