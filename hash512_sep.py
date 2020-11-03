@@ -30,7 +30,7 @@ def exec(filepath):
 
 
 def main(file_path, times):
-    psutil.Process().nice(0)
+    psutil.Process().nice(-10)
     results = []
 
     for i in range(times):
